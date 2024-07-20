@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce_API.Persistence.Repository
 {
-    public class CustomerWriteRepository : WriteRepository<Customer>, ICustomerWriteCustomer
+    public class CustomerWriteRepository : WriteRepository<Customer>, ICustomerWriteRepository
     {
         public CustomerWriteRepository(E_Commerce_APIDbContext context) : base(context)
         {

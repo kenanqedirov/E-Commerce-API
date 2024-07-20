@@ -21,7 +21,7 @@ namespace E_Commerce_API.Persistence
              options.UseSqlServer(Configuration.ConnectionString);
          });
             services.AddScoped<ICustomerReadRepository,CustomerReadRepository>();
-            services.AddScoped<ICustomerWriteCustomer,CustomerWriteRepository>();
+            services.AddScoped<ICustomerWriteRepository,CustomerWriteRepository>();
             services.AddScoped<IProductReadRepository,ProductReadRepository>();
             services.AddScoped<IProductWriteRepository,ProductWriteRepository>();
             services.AddScoped<IOrderReadRepository,OrderReadRepository>();

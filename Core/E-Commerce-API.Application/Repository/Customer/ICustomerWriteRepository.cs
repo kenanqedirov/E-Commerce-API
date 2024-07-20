@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce_API.Application.Repository
 {
-    public interface ICustomerWriteCustomer : IWriteRepository<Customer>
+    public interface ICustomerWriteRepository : IWriteRepository<Customer>
     {
     }
 }
