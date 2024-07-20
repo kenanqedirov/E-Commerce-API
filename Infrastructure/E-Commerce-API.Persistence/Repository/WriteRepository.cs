@@ -25,26 +25,41 @@ namespace E_Commerce_API.Persistence.Repository
         public async Task<bool> AddAsync(T model)
         {
            EntityEntry<T> entityEntry = await Table.AddAsync(model);
+            return entityEntry.State == EntityState.Added;
         }
 
-        public Task<bool> AddRangeAsync(List<T> models)
+        public async Task<bool> AddRangeAsync(List<T> models)
         {
-            throw new NotImplementedException();
+           await Table.AddRangeAsync(models);
+            return true;
         }
 
-        public Task<bool> Remove(T model)
+        public bool Remove(T model)
         {
-            throw new NotImplementedException();
+           EntityEntry<T> entityEntry = Table.Remove(model);
+            return entityEntry.State == EntityState.Deleted;
         }
 
-        public Task<bool> Remove(string id)
+        public async Task<bool> RemoveAsync(string id)
         {
-            throw new NotImplementedException();
+           T model = await Table.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+            return Remove(model);
         }
 
-        public Task<bool> UpdateAsync(T model)
+        public bool RemoveRange(List<T> models)
         {
-            throw new NotImplementedException();
+            Table.RemoveRange(models);
+            return true;
         }
+
+        public bool Update(T model)
+        {
+           EntityEntry<T> entityEntry = Table.Update(model);
+            return entityEntry.State == EntityState.Modified;
+        }
+        public async Task<int> SaveAsync()
+          => await _context.SaveChangesAsync();
+        
+
     }
 }
