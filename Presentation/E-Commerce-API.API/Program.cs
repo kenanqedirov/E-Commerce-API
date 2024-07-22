@@ -5,7 +5,13 @@ using E_Commerce_API.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistanceServices();
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -19,7 +25,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
