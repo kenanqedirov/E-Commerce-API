@@ -1,6 +1,7 @@
 
 
 using E_Commerce_API.Application.Validators.Products;
+using E_Commerce_API.Infrastructure;
 using E_Commerce_API.Infrastructure.Filters;
 using E_Commerce_API.Persistence;
 using FluentValidation;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistanceServices();
+builder.Services.AddInfrastructureServices();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
