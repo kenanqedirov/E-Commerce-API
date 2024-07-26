@@ -81,9 +81,10 @@ namespace E_Commerce_API.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload(IFormFileCollection files)
         {
-            await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
+            await _fileService.UploadAsync("resource/product-images", files);//angular qosanda filesi  deyismek lazimdi . Requestden cekmek lazimdi
+            // example ->   Request.Form.Files <- files yerine
             return Ok();
         }
     }
