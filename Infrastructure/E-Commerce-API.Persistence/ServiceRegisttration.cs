@@ -2,6 +2,7 @@
 using E_Commerce_API.Domain.Entities;
 using E_Commerce_API.Persistence.Contexts;
 using E_Commerce_API.Persistence.Repository;
+using E_Commerce_API.Persistence.Repository.File;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -16,16 +17,22 @@ namespace E_Commerce_API.Persistence
     {
         public static void AddPersistanceServices(this IServiceCollection services)
         {
-         services.AddDbContext<E_Commerce_APIDbContext>(options =>
-         {
-             options.UseSqlServer(Configuration.ConnectionString);
-         });
-            services.AddScoped<ICustomerReadRepository,CustomerReadRepository>();
-            services.AddScoped<ICustomerWriteRepository,CustomerWriteRepository>();
-            services.AddScoped<IProductReadRepository,ProductReadRepository>();
-            services.AddScoped<IProductWriteRepository,ProductWriteRepository>();
-            services.AddScoped<IOrderReadRepository,OrderReadRepository>();
-            services.AddScoped<IOrderWriteRepository,OrderWriteRepository>(); 
+            services.AddDbContext<E_Commerce_APIDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.ConnectionString);
+            });
+            services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
+            services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
+            services.AddScoped<IProductReadRepository, ProductReadRepository>();
+            services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+            services.AddScoped<IOrderReadRepository, OrderReadRepository>();
+            services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+            services.AddScoped<IFileReadRepository, FileReadRepository>();
+            services.AddScoped<IFileWriteRepository, FileWriteRepository>();
+            services.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
+            services.AddScoped<IProductImageFileWriteRepository, ProductImageFileWriteRepository>();
+            services.AddScoped<IInvoiceFileReadRepository, InvoiceFileReadRepository>();
+            services.AddScoped<IInvoiceFileWriteRepository, InvoiceFileWriteRepository>();
         }
     }
 }
