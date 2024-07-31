@@ -1,11 +1,8 @@
-﻿using E_Commerce_API.Application.Services;
-using E_Commerce_API.Infrastructure.Services;
+﻿using E_Commerce_API.Application.Abstraction.Storage;
+using E_Commerce_API.Infrastructure.Enums;
+using E_Commerce_API.Infrastructure.Services.Storage;
+using E_Commerce_API.Infrastructure.Services.Storage.Local;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commerce_API.Infrastructure
 {
@@ -13,7 +10,30 @@ namespace E_Commerce_API.Infrastructure
     {
         public static void AddInfrastructureServices(this IServiceCollection services)
         {
-            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IStorageService,StorageService>();
+
+        }
+        public static void AddStorage<T>(this IServiceCollection services) where T : class , IStorage
+        {
+            services.AddScoped<IStorage ,T>();
+        }
+        public static void AddStorage<T>(this IServiceCollection services,StorageType storageType) 
+        {
+            switch (storageType)
+            {
+                case StorageType.Local:
+                    services.AddScoped<IStorage, LocalStorage>();
+                    break;
+                case StorageType.Azure:
+
+                    break;
+                case StorageType.AWS:
+
+                    break;
+                default:
+                    services.AddScoped<IStorage,LocalStorage>();
+                    break;
+            }
         }
     }
 }
