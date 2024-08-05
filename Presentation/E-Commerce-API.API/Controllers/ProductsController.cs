@@ -1,10 +1,14 @@
 ﻿using E_Commerce_API.Application.Abstraction.Storage;
+using E_Commerce_API.Application.Features.Commands.CreateProduct;
+using E_Commerce_API.Application.Features.Queries.GetAllProduct;
+using E_Commerce_API.Application.Features.Queries.GetByIdProduct;
 using E_Commerce_API.Application.Repository;
 using E_Commerce_API.Application.RequestParameters;
 using E_Commerce_API.Application.ViewModels.Products;
 using E_Commerce_API.Domain.Entities;
 using E_Commerce_API.Persistence.Repository;
 using E_Commerce_API.Persistence.Repository.File;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -26,7 +30,8 @@ namespace E_Commerce_API.API.Controllers
         private readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
         private readonly IStorageService _storageService;
 
-        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IWebHostEnvironment webHostEnvironment, IProductImageFileWriteRepository productImageFileWriteRepository, IProductImageFileReadRepository productImageFileReadRepository, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IStorageService storageService)
+        private readonly IMediator _mediator;
+        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IWebHostEnvironment webHostEnvironment, IProductImageFileWriteRepository productImageFileWriteRepository, IProductImageFileReadRepository productImageFileReadRepository, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IStorageService storageService, IMediator mediator)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -38,41 +43,27 @@ namespace E_Commerce_API.API.Controllers
             _invoiceFileWriteRepository = invoiceFileWriteRepository;
             _invoiceFileReadRepository = invoiceFileReadRepository;
             _storageService = storageService;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] Pagination pagination)
+        public async Task<IActionResult> Get([FromQuery] GetAllProductQueryRequest getAllProductQueryRequest)
         {
-            var totalCount = _productReadRepository.GetAll(false).Count();
-            var products = _productReadRepository.GetAll(false).Skip(pagination.Size * pagination.Page).Take(pagination.Size)
-                .Select(x => new
-                {
-                    x.Id,
-                    x.Name,
-                    x.Price,
-                    x.Stock,
-                    x.CreatedDate,
-                    x.UpdatedDate,
-                }).ToList();
-            return Ok(new { products, totalCount });
+            GetAllProductQueryResponse products = await _mediator.Send(getAllProductQueryRequest);
+            return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(GetByIdProductQueryRequest getByIdProductQueryRequest)
         {
-            return Ok(await _productReadRepository.GetByIdAsync(id, false));
+            GetByIdProductQueryResponse products = await _mediator.Send(getByIdProductQueryRequest);
+            return Ok(products);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(VM_Create_Product model)
+        public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
         {
-            await _productWriteRepository.AddAsync(new()
-            {
-                Name = model.Name,
-                Price = model.Price,
-                Stock = model.Stock,
-            });
-            await _productWriteRepository.SaveAsync();
+            CreateProductCommandResponse response = await _mediator.Send(createProductCommandRequest);
             return StatusCode((int)HttpStatusCode.Created);
         }
 
@@ -98,7 +89,7 @@ namespace E_Commerce_API.API.Controllers
         public async Task<IActionResult> Upload(IFormFileCollection files)
         {
             var datas = await _storageService.UploadAsync("resource/files", files);
-            /*var datas = await _fileService.UploadAsync("resource/files", files);*///angular qosanda filesi  deyismek lazimdi . Requestden cekmek lazimdi
+            /*var datas = await _fileService.UploadAsync("resource/files", files);*///angular qosanda filesi  deyismek lazimdi . Requestden cekmek lazimdi 
                                                                                     // example ->   Request.Form.Files <- files yerine
 
             await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
@@ -106,7 +97,7 @@ namespace E_Commerce_API.API.Controllers
                 FileName = d.fileName,
                 Path = d.pathOrContainer,
                 Storage = _storageService.StorageName,
-            }).ToList()) ;
+            }).ToList());
             await _productImageFileWriteRepository.SaveAsync();
 
             //await _invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()

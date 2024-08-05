@@ -1,5 +1,6 @@
 
 
+using E_Commerce_API.Application;
 using E_Commerce_API.Application.Validators.Products;
 using E_Commerce_API.Infrastructure;
 using E_Commerce_API.Infrastructure.Filters;
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistanceServices();
 builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationServices();
+
 builder.Services.AddStorage<LocalStorage>();
 
 builder.Services.AddCors(options =>
