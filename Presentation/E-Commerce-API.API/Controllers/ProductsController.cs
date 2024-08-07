@@ -1,5 +1,7 @@
 ﻿using E_Commerce_API.Application.Abstraction.Storage;
 using E_Commerce_API.Application.Features.Commands.CreateProduct;
+using E_Commerce_API.Application.Features.Commands.RemoveProduct;
+using E_Commerce_API.Application.Features.Commands.UpdateProduct;
 using E_Commerce_API.Application.Features.Queries.GetAllProduct;
 using E_Commerce_API.Application.Features.Queries.GetByIdProduct;
 using E_Commerce_API.Application.Repository;
@@ -53,8 +55,8 @@ namespace E_Commerce_API.API.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(GetByIdProductQueryRequest getByIdProductQueryRequest)
+        [HttpGet("{id}")]   // fromRoute doesnt workking ! Fix there 
+        public async Task<IActionResult> GetById([FromRoute]GetByIdProductQueryRequest getByIdProductQueryRequest)
         {
             GetByIdProductQueryResponse products = await _mediator.Send(getByIdProductQueryRequest);
             return Ok(products);
@@ -68,57 +70,32 @@ namespace E_Commerce_API.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(VM_Update_Product model)
+        public async Task<IActionResult> Put([FromBody]UpdateProductCommandRequest updateProductCommandRequest)
         {
-            Product product = await _productReadRepository.GetByIdAsync(model.Id);
-            product.Stock = model.Stock;
-            product.Price = model.Price;
-            product.Name = model.Name;
-            await _productWriteRepository.SaveAsync();
+            var response = await _mediator.Send(updateProductCommandRequest);
             return Ok();
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete([FromRoute]RemoveProductCommandRequest removeProductCommandRequest)
         {
-            await _productWriteRepository.RemoveAsync(id);
-            await _productWriteRepository.SaveAsync();
+            var response = await _mediator.Send(removeProductCommandRequest);
             return Ok();
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Upload(IFormFileCollection files)
-        {
-            var datas = await _storageService.UploadAsync("resource/files", files);
-            /*var datas = await _fileService.UploadAsync("resource/files", files);*///angular qosanda filesi  deyismek lazimdi . Requestden cekmek lazimdi 
-                                                                                    // example ->   Request.Form.Files <- files yerine
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> Upload(IFormFileCollection files)
+        //{
+        //    var datas = await _storageService.UploadAsync("resource/files", files);
 
-            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
-            {
-                FileName = d.fileName,
-                Path = d.pathOrContainer,
-                Storage = _storageService.StorageName,
-            }).ToList());
-            await _productImageFileWriteRepository.SaveAsync();
+        //    await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
+        //    {
+        //        FileName = d.fileName,
+        //        Path = d.pathOrContainer,
+        //        Storage = _storageService.StorageName,
+        //    }).ToList());
+        //    await _productImageFileWriteRepository.SaveAsync();
 
-            //await _invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()
-            //{
-            //    FileName = d.fileName,
-            //    Path = d.path,
-            //    Price = new Random().Next()
-            //}).ToList()) ;
-            //await _invoiceFileWriteRepository.SaveAsync();
-
-            //await _fileWriteRepository.AddRangeAsync(datas.Select(d => new E_Commerce_API.Domain.Entities.File()
-            //{
-            //    FileName = d.fileName,
-            //    Path = d.path,
-            //}).ToList());
-            //await _fileWriteRepository.SaveAsync();
-
-            //var data1 = _fileReadRepository.GetAll(false);
-            //var data2 = _invoiceFileReadRepository.GetAll(false);
-            //var data3 = _productImageFileReadRepository.GetAll(false);
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }

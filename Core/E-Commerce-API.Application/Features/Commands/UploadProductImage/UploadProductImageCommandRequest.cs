@@ -9,5 +9,6 @@ namespace E_Commerce_API.Application.Features.Commands.UploadProductImage
 {
     public class UploadProductImageCommandRequest : IRequest<UploadProductImageCommandResponse>
     {
+        public string Id { get; set; }
     }
 }
