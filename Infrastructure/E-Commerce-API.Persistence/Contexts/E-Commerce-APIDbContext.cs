@@ -1,11 +1,13 @@
 ﻿using E_Commerce_API.Domain.Entities;
 using E_Commerce_API.Domain.Entities.Common;
+using E_Commerce_API.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace E_Commerce_API.Persistence.Contexts
 {
-    public class E_Commerce_APIDbContext : DbContext
+    public class E_Commerce_APIDbContext : IdentityDbContext<AppUser,AppRole,string>
     {
         public E_Commerce_APIDbContext(DbContextOptions options) : base(options)
         {

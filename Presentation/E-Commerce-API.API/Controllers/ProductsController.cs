@@ -55,12 +55,21 @@ namespace E_Commerce_API.API.Controllers
             return Ok(products);
         }
 
+        //[HttpGet("{id}")]   // fromRoute doesnt workking ! Fix there 
+        //public async Task<IActionResult> GetById([FromRoute]GetByIdProductQueryRequest getByIdProductQueryRequest)
+        //{
+        //    GetByIdProductQueryResponse products = await _mediator.Send(getByIdProductQueryRequest);
+        //    return Ok(products);
+        //}
+
         [HttpGet("{id}")]   // fromRoute doesnt workking ! Fix there 
-        public async Task<IActionResult> GetById([FromRoute]GetByIdProductQueryRequest getByIdProductQueryRequest)
+        public async Task<IActionResult> GetById(string id)
         {
-            GetByIdProductQueryResponse products = await _mediator.Send(getByIdProductQueryRequest);
+            GetByIdProductQueryResponse products = await _mediator.Send(new GetByIdProductQueryRequest { Id = id});
             return Ok(products);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
@@ -75,12 +84,23 @@ namespace E_Commerce_API.API.Controllers
             var response = await _mediator.Send(updateProductCommandRequest);
             return Ok();
         }
+
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute]RemoveProductCommandRequest removeProductCommandRequest)
+        public async Task<IActionResult> Delete(string id)
         {
-            var response = await _mediator.Send(removeProductCommandRequest);
+            var response = await _mediator.Send(new RemoveProductCommandRequest { Id = id});
             return Ok();
         }
+
+
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete([FromRoute]RemoveProductCommandRequest removeProductCommandRequest)
+        //{
+        //    var response = await _mediator.Send(removeProductCommandRequest);
+        //    return Ok();
+        //}
+
+
 
         //[HttpPost("[action]")]
         //public async Task<IActionResult> Upload(IFormFileCollection files)

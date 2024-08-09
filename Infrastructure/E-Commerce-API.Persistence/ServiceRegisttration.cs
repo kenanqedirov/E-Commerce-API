@@ -1,5 +1,6 @@
 ﻿using E_Commerce_API.Application.Repository;
 using E_Commerce_API.Domain.Entities;
+using E_Commerce_API.Domain.Entities.Identity;
 using E_Commerce_API.Persistence.Contexts;
 using E_Commerce_API.Persistence.Repository;
 using E_Commerce_API.Persistence.Repository.File;
@@ -21,6 +22,7 @@ namespace E_Commerce_API.Persistence
             {
                 options.UseSqlServer(Configuration.ConnectionString);
             });
+            services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<E_Commerce_APIDbContext>();
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
             services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
