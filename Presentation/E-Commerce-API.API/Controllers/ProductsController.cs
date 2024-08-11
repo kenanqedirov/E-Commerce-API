@@ -1,18 +1,10 @@
-﻿using E_Commerce_API.Application.Abstraction.Storage;
-using E_Commerce_API.Application.Features.Commands.CreateProduct;
+﻿using E_Commerce_API.Application.Features.Commands.CreateProduct;
 using E_Commerce_API.Application.Features.Commands.RemoveProduct;
 using E_Commerce_API.Application.Features.Commands.UpdateProduct;
 using E_Commerce_API.Application.Features.Queries.GetAllProduct;
 using E_Commerce_API.Application.Features.Queries.GetByIdProduct;
-using E_Commerce_API.Application.Repository;
-using E_Commerce_API.Application.RequestParameters;
-using E_Commerce_API.Application.ViewModels.Products;
-using E_Commerce_API.Domain.Entities;
-using E_Commerce_API.Persistence.Repository;
-using E_Commerce_API.Persistence.Repository.File;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 

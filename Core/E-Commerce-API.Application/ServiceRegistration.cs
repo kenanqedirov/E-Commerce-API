@@ -17,7 +17,7 @@ namespace E_Commerce_API.Application
             services.AddMediatR(cfg => {
                 cfg.RegisterServicesFromAssembly(typeof(ServiceRegistration).Assembly);
             });
-            //services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddHttpClient();
         }
     }
 }
