@@ -20,24 +20,24 @@ namespace E_Commerce_API.Application.Features.Commands.AppUser.CreateUser
 
         public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
         {
-           var result = await _userManager.CreateAsync(new()
+            var result = await _userManager.CreateAsync(new()
             {
+                Id = Guid.NewGuid().ToString(),
                 UserName = request.Username,
                 Email = request.Email,
                 NameSurname = request.NameSurname,
-            },request.Password);
-            if(result.Succeeded)
+            }, request.Password);
+            CreateUserCommandResponse response = new() { Succeded = result.Succeeded };
+
+            if (result.Succeeded)
             {
-                return new()
-                {
-                    Succedd = true,
-                    Message = "User successfully created"
-                };
+                response.Message = "User successfully created";
             }
             else
-            {
-                throw new UserCreateFailedException();
-            }
+                foreach (var errors in result.Errors)
+                    response.Message += $"{errors.Code}-{errors.Description}";
+
+            return response;
 
         }
     }

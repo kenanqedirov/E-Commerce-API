@@ -8,7 +8,7 @@ namespace E_Commerce_API.Application.Features.Commands.AppUser.CreateUser
 {
     public class CreateUserCommandResponse
     {
-        public bool Succedd { get; set; }
+        public bool Succeded { get; set; }
         public string Message { get; set; }
     }
 }

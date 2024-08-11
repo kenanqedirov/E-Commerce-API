@@ -22,7 +22,15 @@ namespace E_Commerce_API.Persistence
             {
                 options.UseSqlServer(Configuration.ConnectionString);
             });
-            services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<E_Commerce_APIDbContext>();
+            services.AddIdentity<AppUser, AppRole>(options =>
+            {
+                options.Password.RequiredLength = 3;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<E_Commerce_APIDbContext>();
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
             services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
